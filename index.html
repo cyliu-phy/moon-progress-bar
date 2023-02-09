@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+    </head>
+<style>
+/*-------- Table --------*/
+table {
+  border-collapse: collapse;
+  border-top: 1px solid #ccc;
+  width:60%;
+}
+table,th,tr,td{ 
+border-bottom:1px solid #ccc;
+/* 表格横线 */ 
+padding:5px 0;
+}
+thead{
+  text-align:justify;/*表头两端对齐*/
+}
+</style>
+
+
+    <body>
+        <br><br><br><br><br><br><br><br><br>
+        <center>
+<table>
+    <tbody>
+        <tr><td>Today left: </td>  <td id="day"></td><td id="dayP"></td></tr>
+        <tr><td>This week left: </td>  <td id="week"></td><td id="weekP"></td></tr>
+        <tr><td>This month left: </td>  <td id="month"></td><td id="monthP"></td></tr>
+        <tr><td>This year left: </td>  <td id="year"></td><td id="yearP"></td></tr>
+        <tr><td>My life left: </td>  <td id="life"></td><td id="lifeP"></td></tr>
+    </tbody>
+</table>
+        </center>
+
+
+
+
+<script>
+
+
+
+let myDate = new Date();
+let hour = myDate.getHours();
+let minute = myDate.getMinutes();
+let day = myDate.getDay();
+let date = myDate.getDate();
+let month = myDate.getMonth();
+let year = myDate.getFullYear();
+
+let thisMonth = new Date(year,month,1,8);
+let nextMonth = new Date(year,month+1,1,8);
+
+
+let startOfYear = new Date(year,0,1,8);
+let nextYear = new Date(year+1,0,1,8);
+
+let birthDate = new Date(1999,09,17,8); // month starts with 0
+let lifeSpan = 70;
+let endDate = new Date(1999+lifeSpan,09,17,8);
+
+
+
+const getProgresBar = (percent) => {
+    let light = '🌕';
+    let dark = '🌑';
+    let one_fourth = '🌘';
+    let one_half = '🌗';
+    let three_fourth = '🌖';
+
+    if (percent === 1) {
+        return light.repeat(10);
+        
+    }
+    else{
+        numLight = Math.floor(percent*10);
+        numDark = 9-numLight;
+
+        let middle = '';
+        let remainder = Math.round(((1000*percent)%100)/25);
+
+        switch (remainder) {
+            case 0: middle = dark;break;
+            case 1: middle = one_fourth;break;
+            case 2: middle = one_half;break;
+            case 3: middle = three_fourth;break;
+            case 4: middle = light;
+        }
+        progressBar = light.repeat(numLight) + middle + dark.repeat(numDark);
+
+        return progressBar;
+    }
+}
+
+
+
+const percRound = (percent) => Math.round(percent*100);
+
+let dayPerc = 1-(hour+minute/60)/24;
+let weekPerc = (7-day+dayPerc)/7;
+let monthPerc = (nextMonth-myDate)/(nextMonth-thisMonth); 
+let yearPerc = (nextYear-myDate)/(nextYear-startOfYear);
+let lifePerc = 1-(myDate-birthDate)/(endDate-birthDate);
+
+
+let tday = document.querySelector('#day');
+tday.innerHTML = getProgresBar(dayPerc);
+
+let tweek = document.querySelector('#week');
+tweek.innerHTML = getProgresBar(weekPerc);
+
+let tmonth = document.querySelector('#month');
+tmonth.innerHTML = getProgresBar(monthPerc);
+
+let tyear = document.querySelector('#year');
+tyear.innerHTML = getProgresBar(yearPerc);
+
+let tlife = document.querySelector('#life');
+tlife.innerHTML = getProgresBar(lifePerc)
+
+let tdayP = document.querySelector('#dayP');
+tdayP.innerHTML = percRound(dayPerc) + "%";
+
+let tweekP = document.querySelector('#weekP');
+tweekP.innerHTML = percRound(weekPerc) + "%";
+
+let tmonthP = document.querySelector('#monthP');
+tmonthP.innerHTML = percRound(monthPerc) + "%";
+
+let tyearP = document.querySelector('#yearP');
+tyearP.innerHTML = percRound(yearPerc) + "%";
+
+let tlifeP = document.querySelector('#lifeP');
+tlifeP.innerHTML = percRound(lifePerc) + "%";
+</script>
+
+    </body>
+
+</html>
